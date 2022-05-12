@@ -1,11 +1,13 @@
 <template>
     <div>
-        <form>
+        <!-- submit.prevent is equal to e.preventDefault() -->
+        <form @submit.prevent="handleSubmit">
             <label>Email:</label>
             <input type="email" required v-model="email">
             <br>
             <label>Password:</label>
             <input type="password" required v-model="password">
+            <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
             <label>Role:</label>
             <br>
@@ -34,12 +36,17 @@
 
             <label>Skills:</label>
 
-            <input type="text" required v-model="tempSkill" @keyup="addSkill"> 
-            <!-- <input type="text" required v-model="tempSkill" @keyup.alt="addSkill">  -->
+            <!-- <input type="text" required v-model="tempSkill" @keyup="addSkill">  -->
+            <input type="text" v-model="tempSkill" @keyup.alt="addSkill"> 
             <!-- @keyup.alt asks for the alt button to be pressed, also the character won`t show. KeyPress event still happens though. -->
             <div v-for="skill in skills" :key="skill" class="pill">
                <span @click="deleteSkill(skill)"> {{ skill }} </span>
             </div>
+
+            <div class="submit">
+                <button>Create Account</button>
+            </div>
+
         </form>
 
         <p> Your email is: {{ email }} </p>
@@ -64,11 +71,12 @@ export default {
             names: [],
             tempSkill: '',
             skills: [],
+            passwordError: ''
         }
     },
     methods: {
         addSkill(e){
-            if(e.keyCode === 13 && this.tempSkill){
+            if(e.key === ',' && this.tempSkill){
                 if(!this.skills.includes(this.tempSkill)){
                     this.skills.push(this.tempSkill)
                 }
@@ -80,6 +88,18 @@ export default {
                 return skill !== item    
             })
             // console.log(this.skills)
+        },
+        handleSubmit(){
+            // validate password
+            this.passwordError = this.password.length > 5 ? 
+                '' : 'Password must be at least 6 Characters'; 
+            if(!this.passwordError){
+                console.log('email:', this.email )    
+                console.log('password:', this.password )    
+                console.log('role:', this.role )    
+                console.log('skills:', this.skills )    
+                console.log('terms:', this.terms )    
+            }
         },    
     }
 }
@@ -130,6 +150,23 @@ export default {
         font-weight: bold;
         color: white;
         cursor: pointer;
+    }
+    button {
+        background: #0b6dff;
+        border: 0;
+        padding: 10px 20px;
+        margin-top: 20px;
+        color: white;
+        border-radius: 20px;
+    }
+    .submit {
+        text-align: center;
+    }
+    .error {
+        color: #ff0062;
+        margin-top: 10px;
+        font-size: 0.8em;
+        font-weight: bold;
     }
 
 
