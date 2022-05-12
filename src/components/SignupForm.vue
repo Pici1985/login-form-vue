@@ -31,12 +31,24 @@
                 <input type="checkbox" value="Sophie" v-model="names">
                 <label> Sophie </label>
             </div>
+
+            <label>Skills:</label>
+
+            <input type="text" required v-model="tempSkill" @keyup="addSkill"> 
+            <!-- <input type="text" required v-model="tempSkill" @keyup.alt="addSkill">  -->
+            <!-- @keyup.alt asks for the alt button to be pressed, also the character won`t show. KeyPress event still happens though. -->
+            <div v-for="skill in skills" :key="skill" class="pill">
+                {{ skill }}
+            </div>
         </form>
+
         <p> Your email is: {{ email }} </p>
         <p> Password is: {{ password }}</p>
         <p> Your Job title is: {{ role }}</p>
         <p> Terms accepted: {{ terms }}</p>
         <p> People checked: {{ names }}</p>
+        <p> TempSkill: {{ tempSkill }}</p>
+
 
     </div>
 </template>
@@ -49,8 +61,20 @@ export default {
             password: '',
             role: '',
             terms: false,
-            names: []
+            names: [],
+            tempSkill: '',
+            skills: [],
         }
+    },
+    methods: {
+        addSkill(e){
+            if(e.keyCode === 13 && this.tempSkill){
+                if(!this.skills.includes(this.tempSkill)){
+                    this.skills.push(this.tempSkill)
+                }
+                this.tempSkill = ''
+            }
+        }    
     }
 }
 </script>
